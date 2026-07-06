@@ -1,0 +1,28 @@
+.trailer-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.trailer-content {
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: -4rem;
+  right: 0;
+  color: white;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.trailer {
+  width: min(90vw, 700px);
+  aspect-ratio: 16/9;
+  height: auto;
+}

@@ -1,0 +1,13 @@
+.main-content {
+    margin-top: 70px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+}
+
+.dark .main-content {
+    background-color: #111827;
+}
+
+.light .main-content {
+    background:#fff;
+}
