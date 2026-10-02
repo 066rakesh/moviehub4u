@@ -1,28 +1,33 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html {
-    font-size: 62.5%;
+  font-size: 62.5%;
 }
 
 .dashboard {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    min-height: 100vh;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+.overlay {
+  display: none;
 }
 
 @media (max-width: 1024px) {
-    .dashboard {
-        grid-template-columns: 0px 1fr;
-    }
+  .dashboard {
+    grid-template-columns: 0px 1fr;
+  }
 
-    .overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        z-index: 1100;
-    }
+  .overlay.show {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+  }
 }

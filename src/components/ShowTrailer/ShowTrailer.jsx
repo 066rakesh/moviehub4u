@@ -1,32 +1,55 @@
+import { useEffect } from "react";
+import { useMovie } from "../../context/MovieContext";
 import "./ShowTrailer.css";
-import {useContext} from "react";
-import {MovieContext} from "../../context/MovieContext";
 
 export const ShowTrailer = () => {
-  const { state, dispatch} = useContext(MovieContext);
+  const { state, dispatch } = useMovie();
   const { showTrailer, trailerKey } = state;
-  return (
-    <div className="show-trailer">
-      {showTrailer && (
-        <div className="trailer-modal">
-          <div className="trailer-content">
-            <span className="close" onClick={() => dispatch({
-              type: "SET_SHOWTRAILER",
-              load: false,
-            })}>
-              ✖
-            </span>
 
-            <iframe
-              className="trailer"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
-              title="Movie Trailer"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
-      )}
+  const closeTrailer = () => {
+    dispatch({ type: "SET_SHOWTRAILER", load: false });
+  };
+
+  useEffect(() => {
+    if (!showTrailer) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        dispatch({ type: "SET_SHOWTRAILER", load: false });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showTrailer, dispatch]);
+
+  if (!showTrailer) return null;
+
+  return (
+    <div
+      className="trailer-modal"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) closeTrailer();
+      }}
+    >
+      <div className="trailer-content">
+        <button
+          type="button"
+          className="close"
+          aria-label="Close trailer"
+          onClick={closeTrailer}
+        >
+          ✖
+        </button>
+
+        <iframe
+          className="trailer"
+          src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+          title="Movie Trailer"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        ></iframe>
+      </div>
     </div>
   );
 };

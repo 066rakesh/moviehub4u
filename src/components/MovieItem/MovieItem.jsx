@@ -1,11 +1,23 @@
-import { MovieContext } from "../../context/MovieContext";
 import { CiPlay1 } from "react-icons/ci";
-import { useContext } from "react";
+import { useMovie } from "../../context/MovieContext";
 import "./MovieItem.css";
 
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const NO_POSTER = "/images/no_poster.png";
+
 export const MovieItem = ({ movie, genreMap, fetchTrailer }) => {
-  const { state, dispatch } = useContext(MovieContext);
+  const { state, dispatch } = useMovie();
   const { readMore, loadingTrailerId } = state;
+
+  const isExpanded = readMore === movie.id;
+  const isTrailerLoading = loadingTrailerId === movie.id;
+
+  const genreText = movie.genre_ids?.length
+    ? movie.genre_ids
+        .map((id) => genreMap[id])
+        .filter(Boolean)
+        .join(" | ")
+    : "N/A";
 
   return (
     <div className="movie-card">
@@ -13,50 +25,48 @@ export const MovieItem = ({ movie, genreMap, fetchTrailer }) => {
         <img
           src={
             movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-              : "./images/no_poster.png"
+              ? `${IMAGE_BASE_URL}${movie.poster_path}`
+              : NO_POSTER
           }
+          alt={movie.title}
+          loading="lazy"
         />
       </div>
+
       <div className="movie-info">
         <div className="top">
           <span className="rating">
-            TMDB Rating: {movie.vote_average.toFixed(1)}
+            TMDB Rating: {(movie.vote_average ?? 0).toFixed(1)}
           </span>
-          <span className="date">{movie.release_date}</span>
+          <span className="date">{movie.release_date || "TBA"}</span>
         </div>
 
         <h3>{movie.title}</h3>
-        <p className="genre">
-          Genre:{" "}
-          {movie.genre_ids?.length
-            ? movie.genre_ids
-                .map((id) => genreMap[id])
-                .filter(Boolean)
-                .join(" | ")
-            : "N/A"}
-        </p>
+        <p className="genre">Genre: {genreText}</p>
 
-        <p className={`description ${readMore === movie.id ? "show" : ""}`}>
+        <p className={`description ${isExpanded ? "show" : ""}`}>
           {movie.overview}
         </p>
 
         <div className="buttons">
           <button
-            onClick={() => {
+            type="button"
+            onClick={() =>
               dispatch({
                 type: "SET_READMORE",
-                load: readMore === movie.id ? null : movie.id,
-              });
-            }}
+                load: isExpanded ? null : movie.id,
+              })
+            }
           >
-            Read More
+            {isExpanded ? "Read Less" : "Read More"}
           </button>
+
           <button
-            disabled={loadingTrailerId === movie.id}
+            type="button"
+            disabled={isTrailerLoading}
             onClick={() => fetchTrailer(movie)}
           >
-            {loadingTrailerId === movie.id ? (
+            {isTrailerLoading ? (
               <>
                 <span className="loader"></span>
                 Loading...

@@ -1,6 +1,5 @@
-import { useReducer, createContext } from "react";
-
-export const MovieContext = createContext();
+import { createContext, useContext, useReducer } from "react";
+const MovieContext = createContext(null);
 
 const initialState = {
   movies: [],
@@ -9,89 +8,65 @@ const initialState = {
   page: 1,
   totalPage: 1,
   readMore: null,
-  searchDelay: "",
   trailerKey: "",
   showTrailer: false,
   loadingTrailerId: null,
 };
 
 const reducer = (state, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case "SET_MOVIES":
-      return {
-        ...state,
-        movies: action.load,
-      };
+      return { ...state, movies: action.load };
 
     case "SET_LOADING":
       return {
         ...state,
         loading: action.load,
+        error: action.load ? null : state.error,
       };
 
     case "SET_ERROR":
-      return {
-        ...state,
-        error: action.load,
-      }
+      return { ...state, error: action.load };
 
     case "SET_PAGE":
-      return ({
-        ...state,
-        page: action.load
-      })
+      return { ...state, page: action.load };
 
     case "SET_TOTALPAGE":
-      return ({
-        ...state,
-        totalPage: action.load,
-      })
+      return { ...state, totalPage: action.load };
 
     case "SET_READMORE":
-      return ({
-        ...state,
-        readMore: action.load,
-      })
+      return { ...state, readMore: action.load };
 
-    case "SET_SEARCHDELAY":
-      return ({
-        ...state,
-        searchDelay: action.load,
-      })
+    case "SET_TRAILERKEY":
+      return { ...state, trailerKey: action.load };
 
-    case "SET_TRAILERKEY": 
-      return ({
-        ...state,
-        trailerKey: action.load,
-      }) 
-      
     case "SET_SHOWTRAILER":
-      return ({
-        ...state,
-        showTrailer: action.load,
-      })
+      return { ...state, showTrailer: action.load };
 
     case "SET_LOADINGTRAILERID":
-      return ({
-        ...state,
-        loadingTrailerId: action.load,
-      })
-    
+      return { ...state, loadingTrailerId: action.load };
+
     default:
       return state;
   }
 };
 
 export const MovieProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer,initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <MovieContext.Provider
-      value={{
-        state,
-        dispatch,
-      }}
-    >
+    <MovieContext.Provider value={{ state, dispatch }}>
       {children}
     </MovieContext.Provider>
   );
+};
+
+export const useMovie = () => {
+  const context = useContext(MovieContext);
+
+  if (!context) {
+    throw new Error("useMovie must be used inside MovieProvider");
+  }
+
+  return context;
 };

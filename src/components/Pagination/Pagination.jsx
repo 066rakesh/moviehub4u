@@ -1,18 +1,16 @@
+import { useMovie } from "../../context/MovieContext";
 import "./Pagination.css";
-import {useContext} from "react";
-import {MovieContext}  from "../../context/MovieContext"
 
 export const Pagination = () => {
-  const { state, dispatch } = useContext(MovieContext);
+  const { state, dispatch } = useMovie();
   const { page, totalPage } = state;
+
   return (
     <div className="pagination">
       <button
-        onClick={() => dispatch({
-          type: "SET_PAGE",
-          load: Math.max(page - 1, 1),
-        })}
+        type="button"
         disabled={page === 1}
+        onClick={() => dispatch({ type: "SET_PAGE", load: page - 1 })}
       >
         Prev
       </button>
@@ -22,11 +20,9 @@ export const Pagination = () => {
       </span>
 
       <button
-        onClick={() => dispatch({
-          type: "SET_PAGE",
-          load: page + 1,
-        })}
+        type="button"
         disabled={page >= totalPage}
+        onClick={() => dispatch({ type: "SET_PAGE", load: page + 1 })}
       >
         Next
       </button>

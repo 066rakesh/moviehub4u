@@ -28,6 +28,8 @@
   font-size: 3rem;
   cursor: pointer;
   display: none;
+  border: none;
+  background: inherit;
 }
 
 .input-box {

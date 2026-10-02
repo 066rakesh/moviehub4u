@@ -1,50 +1,37 @@
+import { useContext } from "react";
+import { NavLink } from "react-router-dom";
 import { FiHome, FiTrendingUp, FiStar, FiCalendar } from "react-icons/fi";
 import { BiSolidCameraMovie } from "react-icons/bi";
 import { IoMdMoon } from "react-icons/io";
-import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { CategoryContext } from "../../context/CategoryContext";
-import { NavLink } from "react-router-dom";
+import { SIDEBAR_GENRES } from "../../constants/genres";
 import "./Sidebar.css";
 
-const menu = [
-  { title: "Home", path: "/", label: "Home", icon: <FiHome /> },
-  {
-    title: "Trending",
-    path: "/trending",
-    label: "Trending",
-    icon: <FiTrendingUp />
-  },
-  {
-    title: "Top Rated",
-    path: "/top-rated",
-    label: "Top Rated",
-    icon: <FiStar />,
-  },
-  {
-    title: "Upcoming",
-    path: "/upcoming",
-    label: "Upcoming",
-    icon: <FiCalendar />,
-  },
-];
+const MOBILE_BREAKPOINT = 1024;
 
-const genres = [
-  { id: 28, name: "Action" },
-  { id: 12, name: "Adventure" },
-  { id: 16, name: "Animation" },
-  { id: 35, name: "Comedy" },
-  { id: 80, name: "Crime" },
-  { id: 18, name: "Drama" },
-  { id: 27, name: "Horror" },
-  { id: 10749, name: "Romance" },
-  { id: 878, name: "Sci-Fi" },
-  { id: 53, name: "Thriller" },
+const menu = [
+  { title: "Home", path: "/", icon: <FiHome /> },
+  { title: "Trending", path: "/trending", icon: <FiTrendingUp /> },
+  { title: "Top Rated", path: "/top-rated", icon: <FiStar /> },
+  { title: "Upcoming", path: "/upcoming", icon: <FiCalendar /> },
 ];
 
 export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
   const { theme, setTheme } = useContext(ThemeContext);
-  const { setSelectedGenre } = useContext(CategoryContext);
+  const { selectedGenre, setSelectedGenre } = useContext(CategoryContext);
+
+  const closeOnMobile = () => {
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+      setToggleBtn(false);
+    }
+  };
+
+  const handleGenreClick = (e, genreId) => {
+    e.preventDefault();
+    setSelectedGenre(genreId);
+    closeOnMobile();
+  };
 
   return (
     <div className={`sidebar ${toggleBtn ? "show" : ""}`}>
@@ -59,15 +46,11 @@ export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
       <div className="filter-box">
         {menu.map((item) => (
           <NavLink
+            key={item.path}
             to={item.path}
             end={item.path === "/"}
-            key={item.title}
             className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={() => {
-              if (window.innerWidth <= 1024) {
-                setToggleBtn(false);
-              }
-            }}
+            onClick={closeOnMobile}
           >
             <span className="icon">{item.icon}</span>
             <span>{item.title}</span>
@@ -78,18 +61,20 @@ export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
       <div className="movie-filter">
         <p>Genres</p>
 
-        {genres.map((genre) => (
+        <a
+          href="#"
+          className={!selectedGenre ? "active" : ""}
+          onClick={(e) => handleGenreClick(e, null)}
+        >
+          <span>All</span>
+        </a>
+
+        {SIDEBAR_GENRES.map((genre) => (
           <a
             href="#"
             key={genre.id}
-            onClick={(e) => {
-              e.preventDefault();
-              setSelectedGenre(genre.id);
-
-              if (window.innerWidth <= 1024) {
-                setToggleBtn(false);
-              }
-            }}
+            className={selectedGenre === genre.id ? "active" : ""}
+            onClick={(e) => handleGenreClick(e, genre.id)}
           >
             <span>{genre.name}</span>
           </a>
@@ -100,9 +85,7 @@ export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
         className="mode-box"
         onClick={() => {
           setTheme((prev) => !prev);
-          if (window.innerWidth <= 1024) {
-            setToggleBtn(false);
-          }
+          closeOnMobile();
         }}
       >
         <span className="mode-icon">
