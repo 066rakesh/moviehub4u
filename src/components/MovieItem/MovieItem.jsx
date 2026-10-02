@@ -36,16 +36,17 @@ export const MovieItem = ({ movie, genreMap, fetchTrailer }) => {
       <div className="movie-info">
         <div className="top">
           <span className="rating">
-            TMDB Rating: {(movie.vote_average ?? 0).toFixed(1)}
+            TMDB Rating:{" "}
+            {movie?.vote_average ? movie?.vote_average.toFixed(1) : "N/A"}
           </span>
-          <span className="date">{movie.release_date || "TBA"}</span>
+          <span className="date">{movie?.release_date || "TBA"}</span>
         </div>
 
-        <h3>{movie.title}</h3>
+        <h3>{movie?.title}</h3>
         <p className="genre">Genre: {genreText}</p>
 
         <p className={`description ${isExpanded ? "show" : ""}`}>
-          {movie.overview}
+          {movie?.overview}
         </p>
 
         <div className="buttons">
@@ -54,7 +55,7 @@ export const MovieItem = ({ movie, genreMap, fetchTrailer }) => {
             onClick={() =>
               dispatch({
                 type: "SET_READMORE",
-                load: isExpanded ? null : movie.id,
+                load: isExpanded ? null : movie?.id,
               })
             }
           >

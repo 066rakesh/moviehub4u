@@ -3,23 +3,18 @@ import { Pagination } from "../Pagination/Pagination";
 import { ShowTrailer } from "../ShowTrailer/ShowTrailer";
 import { MovieItem } from "../MovieItem/MovieItem";
 import "./MoviesCard.css";
+import { Spinner } from "../Spinner/Spinner";
 
 export const MoviesCard = ({ category }) => {
   const { movies, loading, error, genreMap, fetchTrailer } =
     useMovies(category);
 
-  if (loading) {
-    return (
-      <div>
-        <h1 style={{ color: "#9ca3af" }}>Loading...</h1>
-      </div>
-    );
-  }
+  if (loading) return <Spinner />;
 
   if (error) {
     return (
       <div>
-        <h1 style={{ color: "#9ca3af" }}>{error.message}</h1>
+        <h1 style={{ color: "#9ca3af" }}>{error?.message}</h1>
       </div>
     );
   }

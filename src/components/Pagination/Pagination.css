@@ -29,6 +29,7 @@
 
 .pagination button:hover {
   background-color: #ef4444;
+  border: none;
 }
 
 .page-state {

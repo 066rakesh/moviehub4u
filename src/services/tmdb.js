@@ -1,18 +1,11 @@
 import axios from "axios";
 
-const TMDB_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const API_URL = import.meta.env.VITE_API_URL;
 const YOUTUBE_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 const MAX_TMDB_PAGES = 500;
 
-if (!TMDB_KEY) {
-  console.warn(
-    "VITE_TMDB_API_KEY missing hai. .env ya deploy ke env variables check karo.",
-  );
-}
-
 const tmdb = axios.create({
-  baseURL: "https://api.themoviedb.org/3",
-  params: { api_key: TMDB_KEY },
+  baseURL: `${API_URL}/api/tmdb`,
 });
 
 const youtube = axios.create({
@@ -69,11 +62,6 @@ export const getMovies = async ({ category, search, genre, page, signal }) => {
     movies: res.data.results ?? [],
     totalPages: Math.min(res.data.total_pages || 1, MAX_TMDB_PAGES),
   };
-};
-
-export const getGenres = async () => {
-  const res = await tmdb.get("/genre/movie/list");
-  return res.data.genres ?? [];
 };
 
 export const getTrailerKey = async (movieId) => {

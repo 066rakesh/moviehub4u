@@ -19,12 +19,10 @@ export const useMovies = (category) => {
   const { search } = useContext(SearchContext);
   const debouncedSearch = useDebounce(search, 500);
 
-  // Movies fetch + page reset (ek hi effect mein)
   const filtersKey = `${category}|${selectedGenre}|${debouncedSearch}`;
   const prevFiltersKey = useRef(filtersKey);
 
   useEffect(() => {
-    // Filter badla aur page 1 nahi hai: page 1 karo, effect dobara chalega
     if (prevFiltersKey.current !== filtersKey) {
       prevFiltersKey.current = filtersKey;
 
@@ -65,7 +63,6 @@ export const useMovies = (category) => {
     return () => controller.abort();
   }, [page, category, selectedGenre, debouncedSearch, dispatch]);
 
-  // Trailer
   const fetchTrailer = async (movie) => {
     if (loadingTrailerId) return;
 

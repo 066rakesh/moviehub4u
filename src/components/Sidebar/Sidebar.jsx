@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { FiHome, FiTrendingUp, FiStar, FiCalendar } from "react-icons/fi";
 import { BiSolidCameraMovie } from "react-icons/bi";
-import { IoMdMoon } from "react-icons/io";
+import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { ThemeContext } from "../../context/ThemeContext";
 import { CategoryContext } from "../../context/CategoryContext";
 import { SIDEBAR_GENRES } from "../../constants/genres";
@@ -19,7 +19,7 @@ const menu = [
 
 export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
   const { theme, setTheme } = useContext(ThemeContext);
-  const { selectedGenre, setSelectedGenre } = useContext(CategoryContext);
+  const { setSelectedGenre } = useContext(CategoryContext);
 
   const closeOnMobile = () => {
     if (window.innerWidth <= MOBILE_BREAKPOINT) {
@@ -61,11 +61,7 @@ export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
       <div className="movie-filter">
         <p>Genres</p>
 
-        <a
-          href="#"
-          className={!selectedGenre ? "active" : ""}
-          onClick={(e) => handleGenreClick(e, null)}
-        >
+        <a href="#" onClick={(e) => handleGenreClick(e, null)}>
           <span>All</span>
         </a>
 
@@ -73,7 +69,6 @@ export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
           <a
             href="#"
             key={genre.id}
-            className={selectedGenre === genre.id ? "active" : ""}
             onClick={(e) => handleGenreClick(e, genre.id)}
           >
             <span>{genre.name}</span>
@@ -89,9 +84,9 @@ export const Sidebar = ({ toggleBtn, setToggleBtn }) => {
         }}
       >
         <span className="mode-icon">
-          <IoMdMoon />
+          {theme ? <IoMdSunny /> : <IoMdMoon />}
         </span>
-        <span>{theme ? "Dark Mode" : "Light Mode"}</span>
+        <span>{theme ? "Light Mode" : "Dark Mode"}</span>
       </div>
 
       <p className="owner">

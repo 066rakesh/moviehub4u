@@ -14,7 +14,6 @@ const tmdb = axios.create({
   params: { api_key: process.env.TMDB_API_KEY },
 });
 
-// Server chal raha hai ya nahi, ye check karne ke liye
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
@@ -24,7 +23,6 @@ app.use("/api/tmdb", async (req, res) => {
     const response = await tmdb.get(req.path, { params: req.query });
     res.json(response.data);
   } catch (err) {
-    console.log(err.message);
     res.status(err.response?.status || 500).json({ message: err.message });
   }
 });
