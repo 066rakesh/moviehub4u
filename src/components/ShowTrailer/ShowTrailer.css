@@ -18,7 +18,15 @@
   right: 0;
   color: white;
   font-size: 3rem;
+  line-height: 1;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.close:hover {
+  opacity: 0.8;
 }
 
 .trailer {
